@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wknmybf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://coffee_monster:5APPIjQXkOlpyPFH@cluster0.wknmybf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     serverApi: {
@@ -38,12 +38,19 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             const result = await coffeesCollection.findOne(query);
             res.send(result);
-        })
+        });
 
         app.post('/coffees', async (req, res) => {
             const newCoffee = req.body;
             console.log(newCoffee);
             const result = await coffeesCollection.insertOne(newCoffee);
+            res.send(result);
+        })
+
+        app.delete('/coffees/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await coffeesCollection.deleteOne(query);
             res.send(result);
         })
 

@@ -1,5 +1,6 @@
 //src/components/AddCoffee.jsx
 import React from 'react';
+import Swal from 'sweetalert2';
 
 const AddCoffee = () => {
 
@@ -7,7 +8,7 @@ const AddCoffee = () => {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
-        const coffeeData = Object.fromEntries(formData);
+        const coffeeData = Object.fromEntries(formData.entries());
         console.log(coffeeData);
 
         //  coffeeData to  backend API
@@ -20,7 +21,22 @@ const AddCoffee = () => {
         })
         .then((response) => response.json())
         .then((data) => {
+            if (data.acknowledged) {
             console.log('Success:', data);
+            Swal.fire({
+                title: 'Success!',
+                text: 'Coffee added successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to add coffee.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
